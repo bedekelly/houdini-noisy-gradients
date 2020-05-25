@@ -16,7 +16,7 @@ const seed = 4294267596;
 
 class NoisePainter {
 
-  static inputProperties = ['--color1', '--color2', '--power', '--angle'];
+  static inputProperties = ['--color1', '--color2', '--power', '--angle', '--gradientType', '--radialGradientStart', '--radialGradientRadius'];
 
   paint(ctx, geometry, properties) {
     const { width, height } = geometry;
@@ -25,6 +25,7 @@ class NoisePainter {
     const colorB = JSON.parse(properties.get('--color2'));
     const power = parseFloat(properties.get('--power')) || 2;
     const angle = parseFloat(properties.get('--angle')) || 0;
+    const gradientType = (properties.get('--gradientType')[0] || 'linear').trim();
 
     const makeRand = () => mulberry32(seed);
 
@@ -45,10 +46,21 @@ class NoisePainter {
 
     for (let y=0; y<height; y++) {
       for (let x=0; x<width; x++) {
-        let angleToCentre = Math.atan2(y - height / 2, x - width / 2);
-        const distanceToCentre = Math.hypot(height/2 - y, width/2 - x) / (Math.hypot(width, height) / 2);
-        const a = distanceToCentre * Math.cos(angleToCentre - angle);
-        const value = (0.5 - a);
+
+        let value;
+        const max = Math.max(width, height);
+        if (gradientType === 'linear') {
+          const distanceToCentre = Math.hypot(height / 2 - y, width / 2 - x) / (Math.hypot(max, max) / 2);
+          let angleToCentre = Math.atan2(y - height / 2, x - width / 2);
+          const a = distanceToCentre * Math.cos(angleToCentre - angle);
+          value = (0.5 - a);
+        } else if (gradientType === 'radial') {
+          const property = properties.get('--radialGradientStart');
+          const radius = parseFloat(properties.get('--radialGradientRadius')[0] || Math.hypot(max, max));
+          const startPoint = property ? JSON.parse(property) : [0.5, 0.5];
+          const distanceToPoint = Math.hypot(x - startPoint[0] * width, y - startPoint[0] * width);
+          value = distanceToPoint / radius;
+        }
 
         let color = mix3(colorA, colorB, value);
         const n = noiz(x, y);
