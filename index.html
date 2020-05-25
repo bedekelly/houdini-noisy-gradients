@@ -1,0 +1,78 @@
+<!-- index.html -->
+<!doctype html>
+<head>
+  <style>
+
+    body {
+      background: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      flex-wrap: wrap;
+      overflow-y: auto;
+    }
+
+    .planet {
+      background: #222;
+      --power: 3;
+      background: paint(noiseGradient);
+      width: 200px;
+      height: 200px;
+      margin: 30px;
+      border-radius: 50%;
+      /*animation: bob 1s alternate infinite ease-in-out;*/
+    }
+
+    .mercury {
+      --color1: [83, 71, 69];
+      --color2: [231, 221, 211];
+      --angle: 2;
+      width: calc(200px * 0.38);
+      height: calc(200px * 0.38);
+    }
+
+    .venus {
+      width: calc(200px * 0.95);
+      height: calc(200px * 0.95);
+      --color1: [154, 129, 90];
+      --color2: [201, 179, 145];
+    }
+
+    .mars {
+      --color1: [247, 216, 121];
+      --color2: [103, 39, 2];
+      --angle: 4;
+      width: calc(200px * 0.53);
+      height: calc(200px * 0.53);
+    }
+
+    .earth {
+      --color1: [46, 50, 67];
+      --color2: [255,255, 255];
+      --angle: 1.57;
+    }
+
+    @keyframes bob {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(0.95);
+      }
+    }
+
+  </style>
+  <script>
+    CSS.paintWorklet.addModule('noiseGradient.js');
+  </script>
+</head>
+
+<body>
+  <div class="planet mercury"></div>
+  <div class="planet venus"></div>
+  <div class="planet mars"></div>
+  <div class="planet earth"></div>
+</body>
