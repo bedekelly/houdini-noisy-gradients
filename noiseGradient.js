@@ -21,8 +21,10 @@ class NoisePainter {
   paint(ctx, geometry, properties) {
     const { width, height } = geometry;
 
-    const colorA = JSON.parse(properties.get('--color1'));
-    const colorB = JSON.parse(properties.get('--color2'));
+    let colorA = properties.get('--color1')[0].trim();
+    colorA = JSON.parse(colorA);
+    let colorB = properties.get('--color2')[0].trim();
+    colorB = JSON.parse(colorB);
     const power = parseFloat(properties.get('--power')) || 2;
     const angle = parseFloat(properties.get('--angle')) || 0;
     const gradientType = (properties.get('--gradientType')[0] || 'linear').trim();
@@ -55,7 +57,7 @@ class NoisePainter {
           const a = distanceToCentre * Math.cos(angleToCentre - angle);
           value = (0.5 - a);
         } else if (gradientType === 'radial') {
-          const property = properties.get('--radialGradientStart');
+          const property = properties.get('--radialGradientStart')[0];
           const radius = parseFloat(properties.get('--radialGradientRadius')[0] || Math.hypot(max, max));
           const startPoint = property ? JSON.parse(property) : [0.5, 0.5];
           const distanceToPoint = Math.hypot(x - startPoint[0] * width, y - startPoint[0] * width);
